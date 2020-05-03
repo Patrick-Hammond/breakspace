@@ -1,5 +1,5 @@
 import {DisplayObject, Sprite, interaction} from "pixi.js";
-import { Key } from "../../lib/io/Keyboard";
+import { Key } from "../../_lib/io/Keyboard";
 import Game from "../Game";
 
 type Draggable = DisplayObject & {dragging: boolean, data: interaction.InteractionData | null, sx: number, sy: number};

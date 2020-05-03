@@ -1,6 +1,6 @@
 import TileMapModel, {Layer, Tile} from "./TiledJson";
 import {inflate, gunzip} from 'zlib';
-import { AbstractHandler } from "../../../lib/patterns/Chain";
+import { AbstractHandler } from "../../../_lib/patterns/Chain";
 
 abstract class DataHandler extends AbstractHandler<Layer, Promise<void>> {}
 

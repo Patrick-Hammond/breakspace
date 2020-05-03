@@ -1,7 +1,7 @@
 import { Loader, Rectangle, Texture, BaseTexture } from "pixi.js";
 import TileMapModel, {TileSet, Layer} from '../tilemap/TiledJson';
 import { UnCompress, Decode, CreateTiles, ResolveLayerTextures } from "./DataHandlers";
-import { Chain } from "../../../lib/patterns/Chain";
+import { Chain } from "../../../_lib/patterns/Chain";
 
 export async function LoadTileMap(name: string, url: string): Promise<TileMapModel> {
     return new Promise((resolve, reject) => {
