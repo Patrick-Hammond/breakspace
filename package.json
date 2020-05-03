@@ -27,6 +27,8 @@
   "dependencies": {
     "eventemitter3": "^4.0.0",
     "nipplejs": "^0.8.5",
+    "pixi-tilemap": "^2.0.6",
+    "pixi.js": "^5.2.3",
     "zlib": "^1.0.5"
   },
   "devDependencies": {
