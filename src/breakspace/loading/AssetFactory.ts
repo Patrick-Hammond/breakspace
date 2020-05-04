@@ -35,7 +35,7 @@ export default class AssetFactory {
             return this.CreateAnimatedSprite(name);
         }
 
-        return null;
+        throw new Error("Asset Factory - error " + name + " not found.");
     }
 
     CreateTexture(name: string): Texture {

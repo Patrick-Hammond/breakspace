@@ -1,5 +1,5 @@
 import { Ticker } from "pixi.js";
-import * as Stats from "stats.js";
+import Stats from "stats.js";
 
 export class StatsTicker extends Ticker {
     private stats: Stats;

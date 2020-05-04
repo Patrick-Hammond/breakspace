@@ -1,6 +1,6 @@
 import {AnimatedSprite, Sprite} from "pixi.js";
-import AssetFactory from "../../loading/AssetFactory";
-import {Dictionary} from "../../utils/Types";
+import AssetFactory from "../loading/AssetFactory";
+import {Dictionary} from "../../_lib/utils/Types";
 import {CallbackDone} from "./Utils";
 
 export class AnimationSequence {
@@ -26,8 +26,8 @@ export class AnimationSequence {
         clip.name = clipName;
         clip.loop = false;
         clip.play();
-        clip.onComplete = onComplete;
-        clip.onLoop = null;
+        (clip.onComplete as any) = onComplete;
+        (clip.onLoop as any) = null;
 
         this.root.removeChildren();
         this.root.addChild(clip);
@@ -39,7 +39,7 @@ export class AnimationSequence {
     PlayLooped(clipName: string, onLoop ?: () => void): AnimatedSprite {
         const clip = this.Play(clipName);
         clip.loop = true;
-        clip.onLoop = onLoop;
+        (clip.onLoop as any) = onLoop;
         return clip;
     }
 

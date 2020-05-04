@@ -1,5 +1,5 @@
-import GamePad from "../../io/GamePad";
-import {Vec2} from "../../math/Geometry";
+import GamePad from "../../_lib/io/GamePad";
+import {Vec2} from "../../_lib/math/Geometry";
 import GameComponent from "../GameComponent";
 
 export interface ICameraTransform {
@@ -26,7 +26,10 @@ export default class CameraControl extends GameComponent implements ICameraContr
         this.rotationVector.Set(0, 0);
 
         if (this.gamePad.controllers[this.playerId]) {
-            this.rotationVector.Copy(this.gamePad.GetStick(this.playerId, 0, 0.005));
+            const stick = this.gamePad.GetStick(this.playerId, 0, 0.005);
+            if(stick) {
+                this.rotationVector.Copy(stick);
+            }
         }
 
         this.cameraInput.rotation.Copy(this.rotationVector);

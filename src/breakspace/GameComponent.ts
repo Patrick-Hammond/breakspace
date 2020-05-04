@@ -1,6 +1,6 @@
 import {Container} from "pixi.js";
-import AssetFactory from "../loading/AssetFactory";
-import Loader from "../loading/Loader";
+import AssetFactory from "./loading/AssetFactory";
+import Loader from "./loading/Loader";
 import Game from "./Game";
 
 export default abstract class GameComponent {

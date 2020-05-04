@@ -1,6 +1,6 @@
 import {Loader as PixiLoader} from "pixi.js";
 import {LoaderResource} from "pixi.js";
-import { GetNextInImageSequence, ImageSequenceIndex, RemoveExtension } from "../io/Url";
+import { GetNextInImageSequence, ImageSequenceIndex, RemoveExtension } from "../../_lib/io/Url";
 import AssetFactory from "./AssetFactory";
 
 export default class Loader {
@@ -41,9 +41,9 @@ export default class Loader {
                             const seqIndex = ImageSequenceIndex(frame);
 
                             if (seqIndex === 0) {
-                                let nextFrame = frame;
+                                let nextFrame: string | null = frame;
                                 const animFrames: string[] = [];
-                                while (frames[nextFrame]) {
+                                while (nextFrame && frames[nextFrame]) {
                                     animFrames.push(nextFrame);
                                     nextFrame = GetNextInImageSequence(nextFrame);
                                 }

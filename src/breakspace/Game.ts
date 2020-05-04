@@ -1,10 +1,13 @@
+// tslint:disable-next-line:no-var-requires variable-name
+const ScreenFull = require('screenfull-es6');
+
 import { EventEmitter } from "eventemitter3";
 import {Application, interaction, settings, SCALE_MODES, utils} from "pixi.js";
-import GamePad from "../io/GamePad";
-import Keyboard from "../io/Keyboard";
-import { StatsTicker } from "../utils/StatsTicker";
+import GamePad from "../_lib/io/GamePad";
+import Keyboard from "../_lib/io/Keyboard";
+import { StatsTicker } from "./utils/StatsTicker";
 import SceneManager from "./SceneManager";
-import ScreenFull from 'screenfull-es6';
+
 import { IResizeStrategy, GetResizeStrategy, ResizeStrategies } from "./display/ResizeStrategies";
 
 export interface IGameOptions {
