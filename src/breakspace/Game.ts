@@ -9,6 +9,7 @@ import { StatsTicker } from "./utils/StatsTicker";
 import SceneManager from "./SceneManager";
 
 import { IResizeStrategy, GetResizeStrategy, ResizeStrategies } from "./display/ResizeStrategies";
+import { GetSpriteSheetMiddleware } from "breakspace/src/breakspace/loading/Loader";
 
 export interface IGameOptions {
         autoStart?: boolean;
@@ -67,9 +68,16 @@ export default class Game extends Application {
         this.resizeStrategy = GetResizeStrategy(options.fit || "border");
         const onResize = window.onresize = () => this.resizeStrategy.Resize(this.view);
         onResize();
+
+        this.SetLoaderMiddleware();
     }
 
     public get interactionManager(): interaction.InteractionManager {
         return this.renderer.plugins.interaction;
+    }
+
+    protected SetLoaderMiddleware(): void {
+
+        this.loader.use(GetSpriteSheetMiddleware());
     }
 }

@@ -1,69 +1,48 @@
-import {Loader as PixiLoader} from "pixi.js";
-import {LoaderResource} from "pixi.js";
-import { GetNextInImageSequence, ImageSequenceIndex, RemoveExtension } from "../../_lib/io/Url";
-import AssetFactory from "./AssetFactory";
+import { LoaderResource } from "pixi.js";
+import { ImageSequenceIndex, GetNextInImageSequence, RemoveExtension } from "breakspace/src/_lib/io/Url";
+import AssetFactory from "breakspace/src/breakspace/loading/AssetFactory";
 
-export default class Loader {
-    private static _inst: Loader;
-    public static get inst(): Loader {
-        if (!Loader._inst) {
-            Loader._inst = new Loader();
-        }
-        return Loader._inst;
-    }
+export type MiddlewareFunc = (resource: LoaderResource, next: (...params: any[]) => any) => void;
 
-    private loader: PixiLoader;
+// tslint:disable-next-line: variable-name
+export let AnimRegEx = /^.+(?=_f)/;
 
-    constructor() {
-        this.loader = new PixiLoader();
-    }
+export function GetSpriteSheetMiddleware(): MiddlewareFunc {
 
-    /**
-     * Loads a sprite sheet from the given url and then registers
-     * sprites and animations with the AssetFactory
-     *
-     * @param {string} url
-     * @param {RegExp} animRegEx
-     * @param {()=>void} onComplete
-     * @memberof Loader
-     */
-    LoadSpriteSheet(url: string, animRegEx: RegExp, onComplete: () => void): void {
+    return (resource: LoaderResource, next: (...params: any[]) => any) => {
+        if (resource.data && resource.data.frames) {
+            const frames = resource.data.frames;
+            for (const frame in frames) {
+                if (frames.hasOwnProperty(frame)) {
+                    const nameResult = AnimRegEx.exec(frame);
+                    if (nameResult) {
+                        // animation
+                        const name = nameResult[0];
+                        const seqIndex = ImageSequenceIndex(frame);
 
-        this.loader.use((resource: LoaderResource, next: (...params: any[]) => any) => {
-            if (resource.data && resource.data.frames) {
-                const frames = resource.data.frames;
-                for (const frame in frames) {
-                    if (frames.hasOwnProperty(frame)) {
-                        const nameResult = animRegEx.exec(frame);
-                        if (nameResult) {
-                            // animation
-                            const name = nameResult[0];
-                            const seqIndex = ImageSequenceIndex(frame);
-
-                            if (seqIndex === 0) {
-                                let nextFrame: string | null = frame;
-                                const animFrames: string[] = [];
-                                while (nextFrame && frames[nextFrame]) {
-                                    animFrames.push(nextFrame);
-                                    nextFrame = GetNextInImageSequence(nextFrame);
+                        if (seqIndex === 0) {
+                            let nextFrame: string = frame;
+                            const animFrames: string[] = [];
+                            while (frames[nextFrame]) {
+                                animFrames.push(nextFrame);
+                                const nextInSequence = GetNextInImageSequence(nextFrame);
+                                if(nextInSequence) {
+                                    nextFrame = nextInSequence;
                                 }
-
-                                AssetFactory.inst.Add(name, animFrames);
-                                // console.log("creating amination " + name);
                             }
-                        } else {
-                            // image
-                            const name = RemoveExtension(frame);
-                            AssetFactory.inst.Add(name, [frame]);
-                            // console.log("creating sprite " + name);
+
+                            AssetFactory.inst.Add(name, animFrames);
+                            console.log("creating amination " + name);
                         }
+                    } else {
+                        // image
+                        const name = RemoveExtension(frame);
+                        AssetFactory.inst.Add(name, [frame]);
+                        console.log("creating sprite " + name);
                     }
                 }
             }
-            next();
-        });
-
-        this.loader.add(url);
-        this.loader.load(onComplete);
-    }
+        }
+        next();
+    };
 }
