@@ -63,9 +63,11 @@ export class Decode extends DataHandler {
 export class CreateTiles extends DataHandler {
 
     Handle(layer: Layer): Promise<void> | null {
-        layer.tiles = [];
-        const data: number[] = layer.data;
-        data.forEach((d, i) => this.CreateTile(d, i, layer));
+        if(layer.type === "tilelayer") {
+            layer.tiles = [];
+            const data: number[] = layer.data;
+            data.forEach((d, i) => this.CreateTile(d, i, layer));
+        }
         return super.Handle(layer);
     }
 
@@ -95,30 +97,32 @@ export class ResolveLayerTextures extends DataHandler {
     }
 
     Handle(layer: Layer): Promise<void> | null {
-        for (let i = 0; i < layer.tiles.length; i ++) {
-            const tile = layer.tiles[i];
-            const globalTileId = tile.gid;
-            for (let j = this.map.tilesets.length - 1; j >= 0; j -= 1) {
-                const tileSet = this.map.tilesets[j];
-                if (tileSet.firstgid <= globalTileId) {
-                    const tileId = globalTileId - tileSet.firstgid;
+        if(layer.type === "tilelayer") {
+            for (let i = 0; i < layer.tiles.length; i ++) {
+                const tile = layer.tiles[i];
+                const globalTileId = tile.gid;
+                for (let j = this.map.tilesets.length - 1; j >= 0; j -= 1) {
+                    const tileSet = this.map.tilesets[j];
+                    if (tileSet.firstgid <= globalTileId) {
+                        const tileId = globalTileId - tileSet.firstgid;
 
-                    const x = i % layer.width;
-                    const y = Math.floor(i / layer.width);
-                    tile.x = layer.x + x * tileSet.tilewidth;
-                    tile.y = layer.y + y * tileSet.tileheight;
+                        const x = i % layer.width;
+                        const y = Math.floor(i / layer.width);
+                        tile.x = layer.x + x * tileSet.tilewidth;
+                        tile.y = layer.y + y * tileSet.tileheight;
 
-                    if(layer.name === "Collisions") {
+                        if(layer.name === "Collisions") {
+                            break;
+                        }
+
+                        tile.texture = tileSet.textures[tileId];
+
+                        if(tileSet.tiles) {
+                            tileSet.tiles.filter(val => val.id === tileId).forEach(t => tile.animation = t.animation);
+                        }
+
                         break;
                     }
-
-                    tile.texture = tileSet.textures[tileId];
-
-                    if(tileSet.tiles) {
-                        tileSet.tiles.filter(val => val.id === tileId).forEach(t => tile.animation = t.animation);
-                    }
-
-                    break;
                 }
             }
         }
