@@ -14,17 +14,17 @@ export default class TileMapRenderer extends PIXI.Container {
 
         this.model.layers.forEach(layer => {
             if (layer.visible) {
-                const l = new (PIXI as any)['tilemap'].CompositeRectTileLayer();
-                this.addChild(l);
+                const tilemapLayer = new (PIXI as any)['tilemap'].CompositeRectTileLayer();
+                this.addChild(tilemapLayer);
                 if(layer.tiles) {
                     layer.tiles.forEach((tile, i) => {
                         if(tile.texture) {
-                            l.addFrame(tile.texture, tile.x, tile.y);
+                            tilemapLayer.addFrame(tile.texture, tile.x, tile.y);
                         }
                     });
                 }
                 if(layer.type === "imagelayer") {
-                    l.addFrame(PIXI.Texture.from(layer.image), layer.x + layer.offsetx, layer.y + layer.offsety);
+                    tilemapLayer.addFrame(PIXI.Texture.from(layer.image), layer.x + layer.offsetx, layer.y + layer.offsety);
                 }
             }
         });

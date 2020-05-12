@@ -114,7 +114,10 @@ export class ResolveLayerTextures extends DataHandler {
                         tile.texture = tileSet.textures[tileId];
 
                         if(tileSet.tiles) {
-                            tileSet.tiles.filter(val => val.id === tileId).forEach(t => tile.animation = t.animation);
+                            tileSet.tiles.filter(val => val.id === tileId).forEach(t => {
+                                tile.animation = t.animation;
+                                tile.type = t.type;
+                            });
                         }
 
                         break;
