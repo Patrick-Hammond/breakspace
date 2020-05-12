@@ -8,9 +8,10 @@ export function RemoveFromParent(displayObject: PIXI.DisplayObject): PIXI.Displa
     return displayObject;
 }
 
-export function CallbackDone(onComplete?: () => void, context?: any): void {
+// tslint:disable-next-line: ban-types
+export function Callback<T extends Function>(onComplete?: T, context?: any, ...params: any): void {
     if(onComplete) {
-        onComplete.call(context);
+        onComplete.call(context, ...params);
     }
 }
 

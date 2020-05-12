@@ -111,10 +111,6 @@ export class ResolveLayerTextures extends DataHandler {
                         tile.x = layer.x + x * tileSet.tilewidth;
                         tile.y = layer.y + y * tileSet.tileheight;
 
-                        if(layer.name === "Collisions") {
-                            break;
-                        }
-
                         tile.texture = tileSet.textures[tileId];
 
                         if(tileSet.tiles) {

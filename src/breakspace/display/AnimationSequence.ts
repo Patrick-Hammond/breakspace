@@ -1,7 +1,7 @@
 import {AnimatedSprite, Sprite} from "pixi.js";
 import AssetFactory from "../loading/AssetFactory";
 import {Dictionary} from "../../_lib/utils/Types";
-import {CallbackDone} from "./Utils";
+import {Callback} from "./Utils";
 
 export class AnimationSequence {
 
@@ -48,7 +48,7 @@ export class AnimationSequence {
             if(index < clipsNames.length) {
                 this.Play(clipsNames[index], () => playNext(++index));
             } else {
-                CallbackDone(onComplete);
+                Callback(onComplete);
             }
         }
         playNext(0);
