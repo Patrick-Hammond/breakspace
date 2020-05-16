@@ -9,7 +9,8 @@ import { StatsTicker } from "./utils/StatsTicker";
 import SceneManager from "./SceneManager";
 
 import { IResizeStrategy, GetResizeStrategy, ResizeStrategies } from "./display/ResizeStrategies";
-import { GetSpriteSheetMiddleware } from "breakspace/src/breakspace/loading/Loader";
+import { GetSpriteSheetMiddleware, GetSoundSpriteMiddleware } from "breakspace/src/breakspace/loading/LoaderMiddleware";
+import { Sound } from "breakspace/src/breakspace/sound/Sound";
 
 export interface IGameOptions {
         autoStart?: boolean;
@@ -39,6 +40,7 @@ export default class Game extends Application {
     public keyboard = new Keyboard();
     public gamePad = new GamePad();
     public sceneManager = new SceneManager();
+    public sound = new Sound();
     public dispatcher = new EventEmitter();
     public resizeStrategy: IResizeStrategy;
 
@@ -60,7 +62,7 @@ export default class Game extends Application {
 
         if(options.fullscreen && ScreenFull.enabled) {
             const mobileIOS = utils.isMobile.apple && (utils.isMobile.phone || utils.isMobile.tablet);
-            if(mobileIOS) {
+            if(!mobileIOS) {
                 this.interactionManager.once("pointerdown", () => ScreenFull.request(this.view));
             }
         }
@@ -79,5 +81,6 @@ export default class Game extends Application {
     protected SetLoaderMiddleware(): void {
 
         this.loader.use(GetSpriteSheetMiddleware());
+        this.loader.use(GetSoundSpriteMiddleware());
     }
 }

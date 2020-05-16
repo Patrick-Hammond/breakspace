@@ -1,4 +1,4 @@
-import {DisplayObject, Sprite, interaction} from "pixi.js";
+import {DisplayObject, interaction} from "pixi.js";
 import { Key } from "../../_lib/io/Keyboard";
 import Game from "../Game";
 

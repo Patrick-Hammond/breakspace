@@ -1,5 +1,6 @@
 import { LoaderResource } from "pixi.js";
-import { ImageSequenceIndex, GetNextInImageSequence, RemoveExtension } from "breakspace/src/_lib/io/Url";
+import sound from 'pixi-sound';
+import { ImageSequenceIndex, GetNextInImageSequence, RemoveExtension, GetExtension } from "breakspace/src/_lib/utils/File";
 import AssetFactory from "breakspace/src/breakspace/loading/AssetFactory";
 
 export type MiddlewareFunc = (resource: LoaderResource, next: (...params: any[]) => any) => void;
@@ -45,4 +46,19 @@ export function GetSpriteSheetMiddleware(): MiddlewareFunc {
         }
         next();
     };
+}
+
+export function GetSoundSpriteMiddleware(): MiddlewareFunc {
+
+    return (resource: LoaderResource, next: (...params: any[]) => any) => {
+        if (resource.data && resource.data.spritemap) {
+            const name = RemoveExtension(resource.data.resources[0]);
+            const fileGlob = resource.data.resources.map((f: string) => GetExtension(f, false)).join(",");
+            const url =  RemoveExtension(resource.url) + ".{" + fileGlob + "}";
+            const sprites = resource.data.spritemap;
+            sound.add(name, {url, sprites, preload: true, loaded: () => next()});
+        } else {
+            next();
+        }
+    }
 }

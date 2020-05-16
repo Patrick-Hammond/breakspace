@@ -19,8 +19,8 @@ export function GetNextInImageSequence(url: string): string | null {
     return null;
 }
 
-export function GetExtension(url: string): string {
-    const result = url.match(/(\.\w+$)/gim);
+export function GetExtension(url: string, period: boolean = true): string {
+    const result = period ?  url.match(/(\.\w+$)/gim) : url.match(/[^.]+$/gim);
     return result && result.length ? result[0] : "";
 }
 
