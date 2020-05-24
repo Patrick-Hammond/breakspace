@@ -4,6 +4,11 @@ import {IsPromise} from '../../_lib/utils/Types';
 export type SoundInstance = sound.IMediaInstance | null;
 
 export class Sound {
+
+    Mute(tf: boolean): void {
+        tf ? sound.muteAll() : sound.unmuteAll();
+    }
+
     Play(name: string): void {
         if(sound.exists(name)) {
             sound.play(name);

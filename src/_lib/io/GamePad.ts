@@ -73,6 +73,19 @@ export default class GamePad extends EventEmitter {
         return null;
     }
 
+    WaitForButton(controllerId: number, buttonId: number, cb: () => void, context?: any): Cancel {
+        const check = (): void => {
+            const button = this.GetButton(controllerId, buttonId);
+            if(button !== null && button.value !== 0) {
+                cancel();
+                context ? cb.call(context) : cb();
+            }
+        }
+        const i = setInterval(check, 32);
+        const cancel = () => clearInterval(i);
+        return cancel;
+    }
+
     GetStick(controllerId: number, stickId: number, threshold: number): Vec2 | null {
         const controller = this.controllers[controllerId];
 

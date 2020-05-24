@@ -22,3 +22,7 @@ export function Truncate(n: number, digits: number): number {
   const factor = Math.pow(10, digits);
   return Math.round(n * factor) / factor;
 }
+
+export function RandomInt(lowerLimit: number, upperLimit: number): number {
+    return Math.round(Math.random() * (upperLimit - lowerLimit)) + lowerLimit;
+}

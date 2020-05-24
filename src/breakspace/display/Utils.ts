@@ -1,7 +1,27 @@
 import Game from "../Game";
 import { RectangleLike } from "../../_lib/math/Geometry";
+import { Container, DisplayObject } from "pixi.js";
 
-export function RemoveFromParent(displayObject: PIXI.DisplayObject): PIXI.DisplayObject {
+export interface Group extends Container {
+    Update(): Group;
+}
+
+export function HGroup(gap: number, ...displayObject: (DisplayObject & RectangleLike)[]): Group {
+    const c = new Container() as Group;
+    let x = 0;
+    c.Update = (): Group => {
+        displayObject.forEach(d => {
+            d.x = x;
+            d.y = 0;
+            x += d.width + gap;
+            c.addChild(d);
+        });
+        return c;
+    };
+    return c.Update();
+}
+
+export function RemoveFromParent(displayObject: DisplayObject): DisplayObject {
     if (displayObject && displayObject.parent) {
         displayObject.parent.removeChild(displayObject);
     }
@@ -15,8 +35,8 @@ export function Callback<T extends Function>(onComplete?: T, context?: any, ...p
     }
 }
 
-export function CenterScreen(displayObject: RectangleLike): RectangleLike {
-    return CenterOn(displayObject, Game.inst.screen);
+export function CenterScreen(...displayObject: RectangleLike[]): void {
+    displayObject.forEach(d => CenterOn(d, Game.inst.screen));
 }
 
 export function CenterOn<T extends RectangleLike>(object: T, target: RectangleLike): T {
