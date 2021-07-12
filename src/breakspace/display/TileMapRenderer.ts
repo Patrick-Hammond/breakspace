@@ -9,13 +9,22 @@ import Camera from 'breakspace/src/breakspace/display/Camera';
 
 export default class TileMapRenderer extends PIXI.Container {
 
-    constructor(private model: TileMapModel, camera: Camera) {
+    public readonly overlay = new PIXI.Container();
+
+    constructor(camera: Camera) {
         super();
 
-        this.model.layers.forEach(layer => {
+        camera.viewRect.Observe((rect: Rectangle) => {
+            this.pivot.set(rect.x, rect.y);
+            this.scale.set(1 /  camera.scale);
+        });
+    }
+
+    SetMapModel(model: TileMapModel): void {
+        model.layers.forEach(layer => {
             if (layer.visible) {
                 const tilemapLayer = new (PIXI as any)['tilemap'].CompositeRectTileLayer();
-                this.addChild(tilemapLayer);
+                this.addChild(tilemapLayer, this.overlay);
                 if(layer.tiles) {
                     layer.tiles.forEach((tile, i) => {
                         if(tile.texture) {
@@ -27,11 +36,6 @@ export default class TileMapRenderer extends PIXI.Container {
                     tilemapLayer.addFrame(PIXI.Texture.from(layer.image), layer.x + layer.offsetx, layer.y + layer.offsety);
                 }
             }
-        });
-
-        camera.viewRect.Observe((rect: Rectangle) => {
-            this.pivot.set(rect.x, rect.y);
-            this.scale.set(1 /  camera.scale);
         });
     }
 }

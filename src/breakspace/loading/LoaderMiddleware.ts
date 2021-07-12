@@ -5,17 +5,14 @@ import AssetFactory from "breakspace/src/breakspace/loading/AssetFactory";
 
 export type MiddlewareFunc = (resource: LoaderResource, next: (...params: any[]) => any) => void;
 
-// tslint:disable-next-line: variable-name
-export let AnimRegEx = /^.+(?=_f)/;
-
-export function GetSpriteSheetMiddleware(): MiddlewareFunc {
+export function GetSpriteSheetMiddleware(animSearch = /^.+(?=_f)/): MiddlewareFunc {
 
     return (resource: LoaderResource, next: (...params: any[]) => any) => {
         if (resource.data && resource.data.frames) {
             const frames = resource.data.frames;
             for (const frame in frames) {
                 if (frames.hasOwnProperty(frame)) {
-                    const nameResult = AnimRegEx.exec(frame);
+                    const nameResult = animSearch.exec(frame);
                     if (nameResult) {
                         // animation
                         const name = nameResult[0];
