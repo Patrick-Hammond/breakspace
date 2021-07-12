@@ -11,6 +11,7 @@ import SceneManager from "./SceneManager";
 import { IResizeStrategy, GetResizeStrategy, ResizeStrategies } from "./display/ResizeStrategies";
 import { GetSpriteSheetMiddleware, GetSoundSpriteMiddleware } from "breakspace/src/breakspace/loading/LoaderMiddleware";
 import { Sound } from "breakspace/src/breakspace/sound/Sound";
+import AssetFactory from "breakspace/src/breakspace/loading/AssetFactory";
 
 export interface IGameOptions {
         autoStart?: boolean;
@@ -33,6 +34,7 @@ export interface IGameOptions {
         sharedTicker?: boolean;
         sharedLoader?: boolean;
         resizeTo?: Window | HTMLElement;
+        defaultAssetChunkName?: string;
 }
 
 export default class Game extends Application {
@@ -44,8 +46,8 @@ export default class Game extends Application {
     public dispatcher = new EventEmitter();
     public resizeStrategy: IResizeStrategy;
 
-    constructor(options: IGameOptions, showStats: boolean = false) {
-        super(options);
+    constructor(private options: IGameOptions, showStats: boolean = false) {
+        super({...options, sharedLoader: true});
 
         Game.inst = this;
         this.stage.name = "stage";
@@ -72,6 +74,16 @@ export default class Game extends Application {
         onResize();
 
         this.SetLoaderMiddleware();
+    }
+
+    public Load(assetConfigPath: string, cb: () => void): void {
+        AssetFactory.inst.LoadConfig(assetConfigPath, () => {
+            if(this.options.defaultAssetChunkName) {
+                AssetFactory.inst.LoadChunk(this.options.defaultAssetChunkName, cb);
+            } else {
+                cb();
+            }
+        });
     }
 
     public get interactionManager(): interaction.InteractionManager {
